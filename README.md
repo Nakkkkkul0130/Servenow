@@ -206,7 +206,19 @@ git push origin main
 4. **Deploy**
    - Click "Deploy"
    - Wait for build to complete
-   - Get your live URL: `https://servenow-xxx.vercel.app`
+   - Get your live URL: `https://servenow-alpha.vercel.app`
+
+## 🌐 Live Demo
+
+**🚀 [View Live App: https://servenow-alpha.vercel.app](https://servenow-alpha.vercel.app)**
+
+Try the complete food delivery experience with:
+- Login with any email/password (demo mode)
+- Browse menu and add items to cart
+- Experience the gamified thank you page
+- Play 4 interactive games while waiting
+- Track your order in real-time
+- Share with friends via social media
 
 #### Method 2: Vercel CLI
 ```bash
