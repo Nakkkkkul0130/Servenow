@@ -41,9 +41,12 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
   useEffect(() => {
     if (orderDetails) {
       const additionalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      setLiveTotal(orderDetails.total + additionalAmount);
+      const additionalDeliveryFee = deliveryDetails.deliveryType === 'express' ? 60 : 0;
+      const additionalGst = Math.round((additionalAmount + additionalDeliveryFee) * 0.05);
+      const additionalTotal = additionalAmount + additionalDeliveryFee + additionalGst - promoDiscount;
+      setLiveTotal(orderDetails.total + additionalTotal);
     }
-  }, [cartItems, orderDetails]);
+  }, [cartItems, orderDetails, deliveryDetails.deliveryType, promoDiscount]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -57,7 +60,7 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
   const gst = Math.round((subtotal + deliveryFee) * 0.05);
   const total = subtotal + deliveryFee + platformFee + gst - promoDiscount;
   
-  // Calculate final total including original order
+  // Calculate final total including original order and discount
   const finalTotal = orderDetails ? (orderDetails.originalTotal || orderDetails.total) + total : total;
 
   const handlePromoCode = () => {
@@ -341,10 +344,30 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
                 </button>
               </div>
               {promoDiscount > 0 && (
-                <div className="mt-3 p-3 bg-green-100 rounded-lg">
-                  <p className="text-green-800 font-medium">✓ Saved ₹{promoDiscount}</p>
+                <div className="mt-3 p-3 bg-green-100 rounded-lg border border-green-300">
+                  <p className="text-green-800 font-medium">✓ Promo applied! You saved ₹{promoDiscount}</p>
                 </div>
               )}
+              <div className="mt-4 space-y-2">
+                <p className="text-sm font-medium text-gray-700">🎉 Available Codes:</p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setPromoCode('SAVE50')}
+                    className="bg-white border-2 border-green-300 text-green-700 px-3 py-1 rounded-lg text-sm font-bold hover:bg-green-50 transition-all"
+                  >
+                    SAVE50 - ₹50 OFF
+                  </button>
+                  <button
+                    onClick={() => setPromoCode('FIRST100')}
+                    className="bg-white border-2 border-blue-300 text-blue-700 px-3 py-1 rounded-lg text-sm font-bold hover:bg-blue-50 transition-all"
+                  >
+                    FIRST100 - ₹100 OFF
+                  </button>
+                </div>
+                <p className="text-xs text-gray-600 mt-2">
+                  📝 Click on any code to auto-fill, then press Apply
+                </p>
+              </div>
             </div>
 
             {/* Bill Summary */}
