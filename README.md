@@ -180,8 +180,57 @@ export default defineConfig({
 
 ## 🚀 Deployment
 
+### Deploy on Vercel
+
+#### Method 1: GitHub Integration (Recommended)
+1. **Push to GitHub** (if not already done)
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+```
+
+2. **Connect to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Sign up/Login with GitHub
+   - Click "New Project"
+   - Import `Nakkkkkul0130/Servenow` repository
+
+3. **Configure Project**
+   - **Framework Preset**: Vite
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install`
+
+4. **Deploy**
+   - Click "Deploy"
+   - Wait for build to complete
+   - Get your live URL: `https://servenow-xxx.vercel.app`
+
+#### Method 2: Vercel CLI
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login to Vercel
+vercel login
+
+# Deploy from project root
+vercel
+
+# Follow prompts:
+# - Link to existing project? N
+# - Project name: servenow
+# - Directory: ./frontend
+# - Override settings? Y
+# - Build Command: npm run build
+# - Output Directory: dist
+```
+
 ### Build for Production
 ```bash
+cd frontend
 npm run build
 ```
 
