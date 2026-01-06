@@ -52,11 +52,30 @@ function App() {
   };
 
   const handleCheckout = (details) => {
-    const orderId = 100000 + Math.floor(Math.random() * 900000); // Generates 6-digit number between 100000-999999
+    const orderId = 100000 + Math.floor(Math.random() * 900000);
     const newOrderCount = customerOrders + 1;
     setCustomerOrders(newOrderCount);
-    setPlacedOrderItems([...cartItems]); // Store the original order items
-    setOrderDetails({ ...details, orderId, orderCount: newOrderCount, isVipEligible: newOrderCount >= 3 });
+    
+    // Calculate total including original order if exists
+    const originalTotal = orderDetails ? orderDetails.total : 0;
+    const additionalTotal = details.total;
+    const finalTotal = originalTotal + additionalTotal;
+    
+    // Store the original order items if this is the first order
+    if (!orderDetails) {
+      setPlacedOrderItems([...cartItems]);
+    }
+    
+    setOrderDetails({ 
+      ...details, 
+      orderId, 
+      orderCount: newOrderCount, 
+      isVipEligible: newOrderCount >= 3,
+      total: finalTotal,
+      originalTotal: orderDetails ? orderDetails.total : details.total,
+      additionalTotal: orderDetails ? details.total : 0
+    });
+    
     setCurrentPage('thankyou');
     setCartItems([]); // Clear cart after order
   };
