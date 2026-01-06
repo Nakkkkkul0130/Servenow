@@ -44,8 +44,8 @@ A next-generation food delivery web application built with React + Vite, featuri
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/servenow.git
-cd servenow
+git clone https://github.com/Nakkkkkul0130/Servenow.git
+cd Servenow
 ```
 
 2. **Install dependencies**
