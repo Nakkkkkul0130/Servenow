@@ -188,14 +188,14 @@ const ThankYouPage = ({ orderDetails, onBackToMenu, onAddToCart, cartItems, onVi
       
       {/* Section 1: Gamified Order Confirmation */}
       {currentSection === 0 && (
-        <div className="min-h-screen flex items-center justify-center p-8">
-          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full text-center relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center p-4 lg:p-8">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-16 max-w-4xl w-full text-center relative overflow-hidden">
             {/* Floating celebration elements */}
             <div className="absolute inset-0 pointer-events-none">
               {[...Array(15)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute text-2xl opacity-70"
+                  className="absolute text-2xl lg:text-4xl opacity-70"
                   style={{
                     left: `${Math.random() * 100}%`,
                     top: `${Math.random() * 100}%`,
@@ -208,14 +208,14 @@ const ThankYouPage = ({ orderDetails, onBackToMenu, onAddToCart, cartItems, onVi
               ))}
             </div>
 
-            <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 relative z-10">
-              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-24 h-24 lg:w-32 lg:h-32 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 relative z-10">
+              <svg className="w-12 h-12 lg:w-16 lg:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
             
-            <h1 className="text-5xl font-black text-gray-800 mb-4 relative z-10">🎉 Order Confirmed!</h1>
-            <p className="text-xl text-gray-600 mb-8 relative z-10">Get ready for an amazing experience!</p>
+            <h1 className="text-4xl lg:text-6xl font-black text-gray-800 mb-4 lg:mb-6 relative z-10">🎉 Order Confirmed!</h1>
+            <p className="text-xl lg:text-2xl text-gray-600 mb-8 lg:mb-12 relative z-10">Get ready for an amazing experience!</p>
             
             <div className="bg-green-50 rounded-2xl p-6 mb-8 relative z-10">
               <p className="text-lg font-bold text-green-700">Order #{orderDetails?.orderId || '123456'}</p>
@@ -410,24 +410,24 @@ const ThankYouPage = ({ orderDetails, onBackToMenu, onAddToCart, cartItems, onVi
 
       {/* Section 2: Game Zone */}
       {currentSection === 1 && (
-        <div className="min-h-screen p-8">
-          <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen p-4 lg:p-8">
+          <div className="max-w-7xl mx-auto">
             {/* Game Header */}
-            <div className="text-center mb-8">
-              <h2 className="text-4xl font-black text-gray-800 mb-4">🎮 SERVENOW GAME ZONE</h2>
-              <div className="flex items-center justify-center space-x-8">
-                <div className="bg-green-100 rounded-xl p-4">
-                  <p className="text-sm text-green-700">Total Earnings</p>
-                  <p className="text-2xl font-bold text-green-600">₹{totalEarnings}</p>
+            <div className="text-center mb-8 lg:mb-12">
+              <h2 className="text-3xl lg:text-5xl font-black text-gray-800 mb-4 lg:mb-6">🎮 SERVENOW GAME ZONE</h2>
+              <div className="flex items-center justify-center space-x-6 lg:space-x-12">
+                <div className="bg-green-100 rounded-xl p-4 lg:p-6">
+                  <p className="text-sm lg:text-base text-green-700">Total Earnings</p>
+                  <p className="text-2xl lg:text-3xl font-bold text-green-600">₹{totalEarnings}</p>
                 </div>
-                <div className="bg-red-100 rounded-xl p-4">
-                  <p className="text-sm text-red-700">Time Left</p>
-                  <p className="text-2xl font-bold text-red-600">{formatTime(countdown)}</p>
+                <div className="bg-red-100 rounded-xl p-4 lg:p-6">
+                  <p className="text-sm lg:text-base text-red-700">Time Left</p>
+                  <p className="text-2xl lg:text-3xl font-bold text-red-600">{formatTime(countdown)}</p>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
               
               {/* Spin Wheel Game */}
               <div className="bg-white rounded-3xl shadow-xl p-8">
@@ -595,7 +595,54 @@ const ThankYouPage = ({ orderDetails, onBackToMenu, onAddToCart, cartItems, onVi
             </div>
 
             {/* Continue Button */}
-            <div className="text-center mt-8">
+            <div className="text-center mt-8 space-y-4">
+              {/* Refer Friend Gaming Section */}
+              <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-2xl p-6 text-white mb-6">
+                <h3 className="text-xl font-bold mb-4">👥 INVITE FRIENDS TO PLAY!</h3>
+                <p className="mb-4">Challenge friends to beat your gaming score & both earn ₹100 bonus!</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <a
+                    href={`https://wa.me/?text=🎮 Hey! I'm playing games on Servenow while waiting for food and earning rewards! I scored ₹${totalEarnings} so far! 🏆 Join me and let's compete: https://servenow.app/game/user123`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-green-500 hover:bg-green-600 text-white py-2 px-3 rounded-lg font-bold text-sm text-center transition-all transform hover:scale-105"
+                  >
+                    📱 WhatsApp
+                  </a>
+                  <a
+                    href={`https://t.me/share/url?url=https://servenow.app/game/user123&text=🎮 Gaming challenge! I'm earning rewards while waiting for food on Servenow! Current score: ₹${totalEarnings} 🏆 Beat my score!`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-3 rounded-lg font-bold text-sm text-center transition-all transform hover:scale-105"
+                  >
+                    ✈️ Telegram
+                  </a>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=https://servenow.app/game/user123&quote=🎮 Playing games on Servenow while waiting for food! Earned ₹${totalEarnings} so far! 🏆 Join the gaming challenge!`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg font-bold text-sm text-center transition-all transform hover:scale-105"
+                  >
+                    📘 Facebook
+                  </a>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`🎮 Gaming challenge on Servenow! I'm earning rewards while waiting for food - scored ₹${totalEarnings}! 🏆 Beat my score: https://servenow.app/game/user123`);
+                      alert('Gaming challenge link copied!');
+                    }}
+                    className="bg-gray-700 hover:bg-gray-800 text-white py-2 px-3 rounded-lg font-bold text-sm text-center transition-all transform hover:scale-105"
+                  >
+                    📋 Copy
+                  </button>
+                </div>
+                
+                <div className="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
+                  <p className="text-sm font-medium">Challenge Code: <span className="font-bold text-yellow-300">PLAY123</span></p>
+                  <p className="text-xs mt-1">Friends get ₹100 gaming bonus • You get ₹100 when they play</p>
+                </div>
+              </div>
+              
               <button
                 onClick={() => setCurrentSection(2)}
                 className="bg-gradient-to-r from-green-500 to-blue-500 text-white py-6 px-12 rounded-2xl font-bold text-2xl hover:shadow-lg transition-all"
@@ -609,11 +656,11 @@ const ThankYouPage = ({ orderDetails, onBackToMenu, onAddToCart, cartItems, onVi
 
       {/* Section 3: Rewards & VIP */}
       {currentSection === 2 && (
-        <div className="min-h-screen flex items-center justify-center p-8">
-          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl w-full text-center">
-            <div className="text-8xl mb-6">🏆</div>
-            <h2 className="text-5xl font-black text-gray-800 mb-4">CONGRATULATIONS!</h2>
-            <h3 className="text-2xl font-bold text-green-600 mb-8">You earned ₹{totalEarnings} in rewards!</h3>
+        <div className="min-h-screen flex items-center justify-center p-4 lg:p-8">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-16 max-w-4xl w-full text-center">
+            <div className="text-6xl lg:text-8xl mb-6 lg:mb-8">🏆</div>
+            <h2 className="text-4xl lg:text-6xl font-black text-gray-800 mb-4 lg:mb-6">CONGRATULATIONS!</h2>
+            <h3 className="text-2xl lg:text-3xl font-bold text-green-600 mb-8 lg:mb-12">You earned ₹{totalEarnings} in rewards!</h3>
 
             <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-8 mb-8 text-white">
               <h3 className="text-2xl font-bold mb-4">🎮 GAMING CHAMPION STATUS</h3>
@@ -648,6 +695,53 @@ const ThankYouPage = ({ orderDetails, onBackToMenu, onAddToCart, cartItems, onVi
                 </div>
               </div>
             )}
+
+            {/* Refer Friend Section */}
+            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-8 mb-8 text-white">
+              <h3 className="text-2xl font-bold mb-4">🎁 REFER FRIENDS & EARN MORE!</h3>
+              <p className="text-lg mb-6">Share Servenow with friends and both get ₹200 rewards!</p>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <a
+                  href={`https://wa.me/?text=🍽️ Hey! I just had an amazing experience with Servenow food delivery! They have games while you wait and I earned ₹${totalEarnings} in rewards! 🎮 Use my referral link and we both get ₹200: https://servenow.app/ref/user123`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-xl font-bold text-center transition-all transform hover:scale-105"
+                >
+                  📱 WhatsApp
+                </a>
+                <a
+                  href={`https://t.me/share/url?url=https://servenow.app/ref/user123&text=🍽️ Amazing food delivery with games! I earned ₹${totalEarnings} rewards while waiting! Join Servenow and get ₹200 bonus! 🎮`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl font-bold text-center transition-all transform hover:scale-105"
+                >
+                  ✈️ Telegram
+                </a>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=https://servenow.app/ref/user123&quote=🍽️ Just discovered Servenow - food delivery with games! Earned ₹${totalEarnings} while waiting for my order! 🎮 Join and get ₹200 bonus!`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-bold text-center transition-all transform hover:scale-105"
+                >
+                  📘 Facebook
+                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`🍽️ Hey! Check out Servenow - amazing food delivery with games while you wait! I earned ₹${totalEarnings} in rewards! 🎮 Use my link and get ₹200 bonus: https://servenow.app/ref/user123`);
+                    alert('Referral link copied to clipboard!');
+                  }}
+                  className="bg-gray-700 hover:bg-gray-800 text-white py-3 px-4 rounded-xl font-bold text-center transition-all transform hover:scale-105"
+                >
+                  📋 Copy Link
+                </button>
+              </div>
+              
+              <div className="bg-white bg-opacity-20 rounded-xl p-4">
+                <p className="text-sm font-medium">Your Referral Code: <span className="font-bold text-yellow-300">GAME123</span></p>
+                <p className="text-xs mt-1">Friends get ₹200 on first order • You get ₹200 when they order</p>
+              </div>
+            </div>
 
             <div className="space-y-4">
               <button className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold py-6 rounded-2xl text-xl hover:shadow-lg transition-all">

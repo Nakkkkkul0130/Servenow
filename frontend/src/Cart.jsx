@@ -70,30 +70,30 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow-sm p-4">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
+      <div className="bg-white shadow-sm p-4 lg:p-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={onBackToMenu}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-gray-600 hover:text-gray-800 text-sm lg:text-base"
             >
               ← Back
             </button>
-            <h1 className="text-xl font-bold text-gray-800">🛒 Your Cart</h1>
+            <h1 className="text-xl lg:text-2xl font-bold text-gray-800">🛒 Your Cart</h1>
           </div>
           
           {/* Live Tracking Display */}
           {orderDetails && (
             <div className="flex items-center space-x-4">
-              <div className="bg-green-100 rounded-lg px-3 py-2">
-                <p className="text-xs text-green-700">Live Total</p>
-                <p className="font-bold text-green-800">₹{liveTotal}</p>
+              <div className="bg-green-100 rounded-lg px-3 lg:px-4 py-2 lg:py-3">
+                <p className="text-xs lg:text-sm text-green-700">Live Total</p>
+                <p className="font-bold text-green-800 text-sm lg:text-base">₹{liveTotal}</p>
               </div>
-              <div className={`rounded-lg px-3 py-2 ${canMakeChanges ? 'bg-orange-100' : 'bg-red-100'}`}>
-                <p className={`text-xs ${canMakeChanges ? 'text-orange-700' : 'text-red-700'}`}>
+              <div className={`rounded-lg px-3 lg:px-4 py-2 lg:py-3 ${canMakeChanges ? 'bg-orange-100' : 'bg-red-100'}`}>
+                <p className={`text-xs lg:text-sm ${canMakeChanges ? 'text-orange-700' : 'text-red-700'}`}>
                   {canMakeChanges ? 'Changes allowed' : 'Changes locked'}
                 </p>
-                <p className={`font-bold ${canMakeChanges ? 'text-orange-800' : 'text-red-800'}`}>
+                <p className={`font-bold text-sm lg:text-base ${canMakeChanges ? 'text-orange-800' : 'text-red-800'}`}>
                   {formatTime(changeTimer)}
                 </p>
               </div>
@@ -102,16 +102,19 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto p-4 space-y-6">
-        <div className="bg-white rounded-xl shadow-md p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-gray-800">Order Items</h2>
-            {orderDetails && (
-              <div className="text-sm text-blue-600 font-medium">
-                📍 Live Order Tracking
+      <div className="max-w-7xl mx-auto p-4 lg:p-6 space-y-6 lg:space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Main Cart Section */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-xl shadow-md p-4 lg:p-6">
+              <div className="flex items-center justify-between mb-4 lg:mb-6">
+                <h2 className="font-bold text-gray-800 text-lg lg:text-xl">Order Items</h2>
+                {orderDetails && (
+                  <div className="text-sm lg:text-base text-blue-600 font-medium">
+                    📍 Live Order Tracking
+                  </div>
+                )}
               </div>
-            )}
-          </div>
           
           {/* Original Order Items (if exists) */}
           {orderDetails && (
@@ -172,84 +175,89 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-4">
-          <h2 className="font-bold text-gray-800 mb-4">📍 Delivery Details</h2>
-          {orderDetails && (
-            <p className="text-sm text-green-600 mb-3">✓ Using previous delivery details</p>
-          )}
-          <div className="space-y-3">
-            <input
-              type="text"
-              placeholder="Delivery Address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-4">
-          <h2 className="font-bold text-gray-800 mb-4">💰 Bill Summary</h2>
-          <div className="space-y-2">
+        {/* Sidebar - Delivery Details & Bill Summary */}
+        <div className="space-y-6">
+          <div className="bg-white rounded-xl shadow-md p-4 lg:p-6">
+            <h2 className="font-bold text-gray-800 mb-4 text-lg lg:text-xl">📍 Delivery Details</h2>
             {orderDetails && (
-              <>
-                <div className="flex justify-between text-green-600">
-                  <span>Original Order</span>
-                  <span className="font-medium">₹{orderDetails.total}</span>
-                </div>
-                {cartItems.length > 0 && (
-                  <div className="flex justify-between text-orange-600">
-                    <span>Additional Items</span>
-                    <span className="font-medium">₹{cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}</span>
-                  </div>
-                )}
-                <div className="border-t pt-2 flex justify-between text-lg font-bold text-blue-600">
-                  <span>Live Total</span>
-                  <span>₹{liveTotal}</span>
-                </div>
-              </>
+              <p className="text-sm lg:text-base text-green-600 mb-3">✓ Using previous delivery details</p>
             )}
-            
-            {!orderDetails && (
-              <>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">₹{subtotal}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Delivery Fee</span>
-                  <span className={`font-medium ${deliveryFee === 0 ? 'text-green-600' : ''}`}>
-                    {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
-                  </span>
-                </div>
-                {deliveryFee === 0 && orderDetails && (
-                  <p className="text-xs text-green-600">🎆 No extra delivery charge for additional items</p>
-                )}
-                {deliveryFee === 0 && !orderDetails && (
-                  <p className="text-xs text-green-600">🎉 Free delivery on orders above ₹200</p>
-                )}
-                <div className="border-t pt-2 flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span>₹{total}</span>
-                </div>
-              </>
-            )}
+            <div className="space-y-3 lg:space-y-4">
+              <input
+                type="text"
+                placeholder="Delivery Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full p-3 lg:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm lg:text-base"
+              />
+              <input
+                type="tel"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full p-3 lg:p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm lg:text-base"
+              />
+            </div>
           </div>
-        </div>
 
-        <button
-          onClick={handleCheckout}
-          className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
-        >
-          🚀 Place Order - ₹{orderDetails ? liveTotal : total}
-        </button>
+          <div className="bg-white rounded-xl shadow-md p-4 lg:p-6">
+            <h2 className="font-bold text-gray-800 mb-4 text-lg lg:text-xl">💰 Bill Summary</h2>
+            <div className="space-y-2 lg:space-y-3">
+              {orderDetails && (
+                <>
+                  <div className="flex justify-between text-green-600 text-sm lg:text-base">
+                    <span>Original Order</span>
+                    <span className="font-medium">₹{orderDetails.total}</span>
+                  </div>
+                  {cartItems.length > 0 && (
+                    <div className="flex justify-between text-orange-600 text-sm lg:text-base">
+                      <span>Additional Items</span>
+                      <span className="font-medium">₹{cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}</span>
+                    </div>
+                  )}
+                  <div className="border-t pt-2 flex justify-between text-lg lg:text-xl font-bold text-blue-600">
+                    <span>Live Total</span>
+                    <span>₹{liveTotal}</span>
+                  </div>
+                </>
+              )}
+              
+              {!orderDetails && (
+                <>
+                  <div className="flex justify-between text-sm lg:text-base">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="font-medium">₹{subtotal}</span>
+                  </div>
+                  <div className="flex justify-between text-sm lg:text-base">
+                    <span className="text-gray-600">Delivery Fee</span>
+                    <span className={`font-medium ${deliveryFee === 0 ? 'text-green-600' : ''}`}>
+                      {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
+                    </span>
+                  </div>
+                  {deliveryFee === 0 && orderDetails && (
+                    <p className="text-xs lg:text-sm text-green-600">🎆 No extra delivery charge for additional items</p>
+                  )}
+                  {deliveryFee === 0 && !orderDetails && (
+                    <p className="text-xs lg:text-sm text-green-600">🎉 Free delivery on orders above ₹200</p>
+                  )}
+                  <div className="border-t pt-2 flex justify-between text-lg lg:text-xl font-bold">
+                    <span>Total</span>
+                    <span>₹{total}</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={handleCheckout}
+            className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 lg:py-6 rounded-xl font-bold text-lg lg:text-xl hover:shadow-lg transition-all transform hover:scale-105"
+          >
+            🚀 Place Order - ₹{orderDetails ? liveTotal : total}
+          </button>
+        </div>
       </div>
     </div>
   );
