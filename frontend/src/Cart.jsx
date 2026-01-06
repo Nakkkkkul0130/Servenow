@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout }) => {
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
+const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails }) => {
+  const [address, setAddress] = useState(orderDetails?.address || '');
+  const [phone, setPhone] = useState(orderDetails?.phone || '');
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const deliveryFee = subtotal > 200 ? 0 : 40;
@@ -84,6 +84,9 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout }) => {
 
         <div className="bg-white rounded-xl shadow-md p-4">
           <h2 className="font-bold text-gray-800 mb-4">📍 Delivery Details</h2>
+          {orderDetails && (
+            <p className="text-sm text-green-600 mb-3">✓ Using previous delivery details</p>
+          )}
           <div className="space-y-3">
             <input
               type="text"

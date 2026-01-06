@@ -9,9 +9,14 @@ function App() {
   const [user, setUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [orderDetails, setOrderDetails] = useState(null);
+  const [customerOrders, setCustomerOrders] = useState(0); // Track customer order count
+  const [placedOrderItems, setPlacedOrderItems] = useState([]); // Store original order items
 
   const handleLogin = (userData) => {
     setUser(userData);
+    // Simulate existing customer with random order count
+    const existingOrders = Math.floor(Math.random() * 8); // 0-7 orders
+    setCustomerOrders(existingOrders);
     setCurrentPage('menu');
   };
 
@@ -46,8 +51,11 @@ function App() {
   };
 
   const handleCheckout = (details) => {
-    const orderId = 'SN' + Date.now() + Math.floor(Math.random() * 1000);
-    setOrderDetails({ ...details, orderId });
+    const orderId = 100000 + Math.floor(Math.random() * 900000); // Generates 6-digit number between 100000-999999
+    const newOrderCount = customerOrders + 1;
+    setCustomerOrders(newOrderCount);
+    setPlacedOrderItems([...cartItems]); // Store the original order items
+    setOrderDetails({ ...details, orderId, orderCount: newOrderCount, isVipEligible: newOrderCount >= 3 });
     setCurrentPage('thankyou');
     setCartItems([]); // Clear cart after order
   };
@@ -78,12 +86,13 @@ function App() {
         onUpdateCart={handleUpdateCart}
         onBackToMenu={handleBackToMenu}
         onCheckout={handleCheckout}
+        orderDetails={orderDetails}
       />
     );
   }
 
   if (currentPage === 'thankyou') {
-    return <ThankYouPage orderDetails={orderDetails} onBackToMenu={handleBackToMenu} />;
+    return <ThankYouPage orderDetails={orderDetails} onBackToMenu={handleBackToMenu} onAddToCart={handleAddToCart} cartItems={cartItems} onViewCart={() => setCurrentPage('cart')} placedOrderItems={placedOrderItems} />;
   }
 
   return null;
