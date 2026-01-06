@@ -3,6 +3,7 @@ import LoginSignup from './LoginSignup';
 import Menu from './Menu';
 import Cart from './Cart';
 import ThankYouPage from './ThankYouPage';
+import OrderTracking from './OrderTracking';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('login');
@@ -92,7 +93,11 @@ function App() {
   }
 
   if (currentPage === 'thankyou') {
-    return <ThankYouPage orderDetails={orderDetails} onBackToMenu={handleBackToMenu} onAddToCart={handleAddToCart} cartItems={cartItems} onViewCart={() => setCurrentPage('cart')} placedOrderItems={placedOrderItems} />;
+    return <ThankYouPage orderDetails={orderDetails} onBackToMenu={handleBackToMenu} onAddToCart={handleAddToCart} cartItems={cartItems} onViewCart={() => setCurrentPage('cart')} placedOrderItems={placedOrderItems} onTrackOrder={() => setCurrentPage('tracking')} />;
+  }
+
+  if (currentPage === 'tracking') {
+    return <OrderTracking orderDetails={orderDetails} onBackToThankYou={() => setCurrentPage('thankyou')} />;
   }
 
   return null;

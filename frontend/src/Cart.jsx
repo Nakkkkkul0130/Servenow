@@ -1,11 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails }) => {
   const [address, setAddress] = useState(orderDetails?.address || '');
   const [phone, setPhone] = useState(orderDetails?.phone || '');
+  const [liveTotal, setLiveTotal] = useState(orderDetails?.total || 0);
+  const [changeTimer, setChangeTimer] = useState(120); // 2 minutes
+  const [canMakeChanges, setCanMakeChanges] = useState(true);
+
+  // Live tracking countdown
+  useEffect(() => {
+    if (orderDetails && changeTimer > 0) {
+      const timer = setInterval(() => {
+        setChangeTimer(prev => {
+          if (prev <= 1) {
+            setCanMakeChanges(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [orderDetails, changeTimer]);
+
+  // Update live total when cart changes
+  useEffect(() => {
+    if (orderDetails) {
+      const additionalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      setLiveTotal(orderDetails.total + additionalAmount);
+    }
+  }, [cartItems, orderDetails]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const deliveryFee = subtotal > 200 ? 0 : 40;
+  // No delivery fee for additional orders if there's already a placed order
+  const deliveryFee = orderDetails ? 0 : (subtotal > 200 ? 0 : 40);
   const total = subtotal + deliveryFee;
 
   const handleCheckout = () => {
@@ -37,49 +71,105 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm p-4">
-        <div className="max-w-2xl mx-auto flex items-center space-x-4">
-          <button
-            onClick={onBackToMenu}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            ← Back
-          </button>
-          <h1 className="text-xl font-bold text-gray-800">🛒 Your Cart</h1>
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={onBackToMenu}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              ← Back
+            </button>
+            <h1 className="text-xl font-bold text-gray-800">🛒 Your Cart</h1>
+          </div>
+          
+          {/* Live Tracking Display */}
+          {orderDetails && (
+            <div className="flex items-center space-x-4">
+              <div className="bg-green-100 rounded-lg px-3 py-2">
+                <p className="text-xs text-green-700">Live Total</p>
+                <p className="font-bold text-green-800">₹{liveTotal}</p>
+              </div>
+              <div className={`rounded-lg px-3 py-2 ${canMakeChanges ? 'bg-orange-100' : 'bg-red-100'}`}>
+                <p className={`text-xs ${canMakeChanges ? 'text-orange-700' : 'text-red-700'}`}>
+                  {canMakeChanges ? 'Changes allowed' : 'Changes locked'}
+                </p>
+                <p className={`font-bold ${canMakeChanges ? 'text-orange-800' : 'text-red-800'}`}>
+                  {formatTime(changeTimer)}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto p-4 space-y-6">
         <div className="bg-white rounded-xl shadow-md p-4">
-          <h2 className="font-bold text-gray-800 mb-4">Order Items</h2>
-          {cartItems.map(item => (
-            <div key={item.id} className="flex items-center justify-between py-3 border-b last:border-b-0">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl">{item.image}</span>
-                <div>
-                  <h3 className="font-medium text-gray-800">{item.name}</h3>
-                  <p className="text-sm text-gray-500">₹{item.price} each</p>
-                </div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-gray-800">Order Items</h2>
+            {orderDetails && (
+              <div className="text-sm text-blue-600 font-medium">
+                📍 Live Order Tracking
               </div>
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => onUpdateCart(item.id, -1)}
-                    className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center font-bold"
-                  >
-                    -
-                  </button>
-                  <span className="font-bold">{item.quantity}</span>
-                  <button
-                    onClick={() => onUpdateCart(item.id, 1)}
-                    className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold"
-                  >
-                    +
-                  </button>
-                </div>
-                <p className="font-bold text-gray-800 w-16 text-right">₹{item.price * item.quantity}</p>
+            )}
+          </div>
+          
+          {/* Original Order Items (if exists) */}
+          {orderDetails && (
+            <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-200">
+              <h3 className="text-sm font-bold text-green-700 mb-2">✓ Original Order (Confirmed)</h3>
+              <div className="text-sm text-green-600">
+                <p>Order #{orderDetails.orderId} - ₹{orderDetails.total}</p>
+                <p className="text-xs">Being prepared by kitchen</p>
               </div>
             </div>
-          ))}
+          )}
+          
+          {/* Additional Items */}
+          {cartItems.length > 0 && (
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-orange-700 mb-2">
+                {orderDetails ? '🎆 Additional Items' : 'Cart Items'}
+              </h3>
+              {cartItems.map(item => (
+                <div key={item.id} className="flex items-center justify-between py-3 border-b last:border-b-0">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{item.image}</span>
+                    <div>
+                      <h3 className="font-medium text-gray-800">{item.name}</h3>
+                      <p className="text-sm text-gray-500">₹{item.price} each</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => onUpdateCart(item.id, -1)}
+                        disabled={!canMakeChanges}
+                        className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center font-bold disabled:bg-gray-100 disabled:text-gray-400"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold">{item.quantity}</span>
+                      <button
+                        onClick={() => onUpdateCart(item.id, 1)}
+                        disabled={!canMakeChanges}
+                        className="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold disabled:bg-gray-400"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p className="font-bold text-gray-800 w-16 text-right">₹{item.price * item.quantity}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {!canMakeChanges && (
+            <div className="bg-red-50 rounded-xl p-4 text-center border border-red-200">
+              <p className="text-red-700 font-bold">⏰ Time's up! No more changes allowed</p>
+              <p className="text-red-600 text-sm">Your order is being prepared</p>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-4">
@@ -108,23 +198,49 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
         <div className="bg-white rounded-xl shadow-md p-4">
           <h2 className="font-bold text-gray-800 mb-4">💰 Bill Summary</h2>
           <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">₹{subtotal}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Delivery Fee</span>
-              <span className={`font-medium ${deliveryFee === 0 ? 'text-green-600' : ''}`}>
-                {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
-              </span>
-            </div>
-            {deliveryFee === 0 && (
-              <p className="text-xs text-green-600">🎉 Free delivery on orders above ₹200</p>
+            {orderDetails && (
+              <>
+                <div className="flex justify-between text-green-600">
+                  <span>Original Order</span>
+                  <span className="font-medium">₹{orderDetails.total}</span>
+                </div>
+                {cartItems.length > 0 && (
+                  <div className="flex justify-between text-orange-600">
+                    <span>Additional Items</span>
+                    <span className="font-medium">₹{cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)}</span>
+                  </div>
+                )}
+                <div className="border-t pt-2 flex justify-between text-lg font-bold text-blue-600">
+                  <span>Live Total</span>
+                  <span>₹{liveTotal}</span>
+                </div>
+              </>
             )}
-            <div className="border-t pt-2 flex justify-between text-lg font-bold">
-              <span>Total</span>
-              <span>₹{total}</span>
-            </div>
+            
+            {!orderDetails && (
+              <>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="font-medium">₹{subtotal}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Delivery Fee</span>
+                  <span className={`font-medium ${deliveryFee === 0 ? 'text-green-600' : ''}`}>
+                    {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
+                  </span>
+                </div>
+                {deliveryFee === 0 && orderDetails && (
+                  <p className="text-xs text-green-600">🎆 No extra delivery charge for additional items</p>
+                )}
+                {deliveryFee === 0 && !orderDetails && (
+                  <p className="text-xs text-green-600">🎉 Free delivery on orders above ₹200</p>
+                )}
+                <div className="border-t pt-2 flex justify-between text-lg font-bold">
+                  <span>Total</span>
+                  <span>₹{total}</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -132,7 +248,7 @@ const Cart = ({ cartItems, onUpdateCart, onBackToMenu, onCheckout, orderDetails 
           onClick={handleCheckout}
           className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all transform hover:scale-105"
         >
-          🚀 Place Order - ₹{total}
+          🚀 Place Order - ₹{orderDetails ? liveTotal : total}
         </button>
       </div>
     </div>
